@@ -14,6 +14,10 @@ class BaseLineModel:
     def relu(self, z):
         return z if z>0 else 0
     
+    def fit(self, X, y):
+        
+        return
+    
 
 
 
@@ -31,8 +35,29 @@ class DataExtractor:
                     usecols=range(len(self.column_names)))
         print(f"Initial shape : {df.shape}")
         print(df.head())
-
         return df
+    
+    def preprocess(self, df):
+        df.dropna(inplace=True)
+        print(f"Shape after dropping missing values : {df.shape}")
+        df.drop(columns=["id"], inplace=True)
+        print(f"Shape after dropping id : {df.shape}")
+
+        y= df["class"].values
+        X= df.drop(columns=["class"]).values
+
+        # Convert labels: 2 -> 0 (Benign), 4 -> 1 (Malignant)
+        y=np.where(y==4, 1, 0)
+
+        #Normalize
+        X=(X-X.mean())/(X.std() + 1e-8)
+
+        print("X shape : ", X.shape)
+        print("y distribution", np.bincount(y))
+
+        return X,y
+    
+
 
 
 
@@ -54,7 +79,10 @@ def main():
 
 
     dataExtractor = DataExtractor(FILE_PATH, COLUMN_NAMES)
-    dataExtractor.read_csv()
+    df = dataExtractor.read_csv()
+    X,y = dataExtractor.preprocess(df)
+
+
     base_line = BaseLineModel(FILE_PATH, COLUMN_NAMES)
     
 
