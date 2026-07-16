@@ -17,7 +17,7 @@ class BaseLineModel:
         return z if z>0 else 0
     
     def fit(self, X, y):
-        m,n = X.shape()
+        m,n = X.shape
         self.w = np.zeros(n)
         self.b = 0
 
@@ -55,10 +55,10 @@ class BaseLineModel:
             self.loss_history.append(epoch_loss/m)    
         return self
     
-    def predict(self, X, y):
+    def predict(self, X):
         z = np.dot(X, self.w) + self.b
 
-        y_hat = 1 if (self.sigmoid(z)>0.5) else 0
+        y_hat = (self.sigmoid(z)>0.5).astype(int)
         return y_hat
 
 
@@ -132,7 +132,7 @@ def main():
         X, y, test_size=0.2, random_state=42
     )
 
-    base_line = BaseLineModel(FILE_PATH, COLUMN_NAMES)
+    base_line = BaseLineModel()
     
     # Train baseline model
     print("Training baseline model...")
